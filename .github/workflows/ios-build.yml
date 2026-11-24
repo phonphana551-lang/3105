@@ -1,0 +1,30 @@
+
+name: Build 3105 IPA
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Find Xcode project
+        run: |
+          find . -name "*.xcodeproj" -print
+          find . -name "*.xcworkspace" -print
+
+      - name: Build
+        run: |
+          PROJECT=$(find . -name "*.xcodeproj" -print -quit)
+          if [ -z "$PROJECT" ]; then
+            echo "Xcode project not found"
+            exit 1
+          fi
+          xcodebuild -list -project "$PROJECT"
